@@ -1,9 +1,12 @@
 import Algorithm.Encrypt;
 import Algorithm.Decrypt;
 import FileIO.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
@@ -20,26 +23,81 @@ public class Main {
                 args[3]: Password/Passkey
                     String
          */
+
+        //If key wasn't found or inputted after to create one
+        if(args[3].equals(null)){
+            System.out.println("The key file was not found or was not inputted.\n Would you like to create one: (y/n)");
+            Scanner userInput = new Scanner(System.in);
+
+            if(userInput.nextLine().trim().equalsIgnoreCase("y")){
+                System.out.println("Enter a sentence that you would like to use as a pass key:");
+
+                //Create key sha256 key based on user input. Saves it to the program dir
+                FileIO.save(DigestUtils.sha256(userInput.nextLine()), System.getProperty("user.dir") + "/user.key");
+                System.out.println("A key file was created in the working directory");
+
+                //Update the args
+                args[3] = System.getProperty("user.dir");
+            } else return;
+        }
+
         if(args[0].equals("-e")){
             //Load file into memory
             byte[] fileBytes = FileIO.load(new File(args[1]));
 
-            //Run encryption algorithm
-            Encrypt.encrypt(fileBytes, args[3]);
+            //bytes that will be outputted are the next highest multiple of 16
+            byte[] encryptedBytes = new byte[((fileBytes.length) / 16) * 16 + 16];
+
+            //Split fileByte is into 16 byte sections
+            for(int i = 0; i < ((fileBytes.length) / 16) * 16 + 16; i += 16){
+                byte[] temp = new byte[16];
+
+                //get 16 bytes starting from i to i + 15. If end of file add zeros
+                for(int c = 0; c < 16; c++){
+                    try{
+                        temp[c] = fileBytes[c + i];
+                    } catch (ArrayIndexOutOfBoundsException e){
+                        //add zeros if the end of the file
+                        temp[c] = (byte) 0;
+                    }
+                }
+
+                //Run encryption algorithm
+                Encrypt.encrypt(temp, args[3]);
+
+                //Combine the encrypted bytes
+                for(int c = 0; c < 16; c++){
+                    encryptedBytes[c+i] = temp[c];
+                }
+            }
+
 
             //Save file Bytes to specified output location
-            FileIO.save(fileBytes, args[2]);
+            FileIO.save(encryptedBytes, args[2]);
 
         } else if (args[0].equals("-d")){
             //Load encoded file into memory
             byte[] fileBytes = FileIO.load(new File(args[1]));
+            byte[] decryptedBytes = new byte[fileBytes.length];
 
-            //Run decryption algorithm
-            Decrypt.decrypt(fileBytes, args[3]);
+            for(int i = 0; i < fileBytes.length; i += 16){
+                byte[] temp = Arrays.copyOfRange(fileBytes, i, i+15);
+
+                //Run decryption algorithm
+                Decrypt.decrypt(fileBytes, args[3]);
+
+                //Combine the decrypted bytes
+                for(int c = 0; c < 15; c++){
+                    decryptedBytes[c+i] = temp[c];
+                }
+
+            }
 
             //Save file Bytes to specified output location
-            FileIO.save(fileBytes, args[2]);
+            FileIO.save(decryptedBytes, args[2]);
         }
+
+
 
     }
 
