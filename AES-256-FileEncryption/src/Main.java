@@ -1,5 +1,5 @@
-import Algorithm.Algorithm;
-import Algorithm.InvAlgorithm;
+import Algorithm.Encrypt;
+import Algorithm.Decrypt;
 import FileIO.*;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public class Main {
             byte[] fileBytes = FileIO.load(new File(args[1]));
 
             //Run encryption algorithm
-            Algorithm.encode(fileBytes, args[3]);
+            Encrypt.encrypt(fileBytes, args[3]);
 
             //Save file Bytes to specified output location
             FileIO.save(fileBytes, args[2]);
@@ -35,7 +35,7 @@ public class Main {
             byte[] fileBytes = FileIO.load(new File(args[1]));
 
             //Run decryption algorithm
-            InvAlgorithm.decode(fileBytes, args[3]);
+            Decrypt.decrypt(fileBytes, args[3]);
 
             //Save file Bytes to specified output location
             FileIO.save(fileBytes, args[2]);
