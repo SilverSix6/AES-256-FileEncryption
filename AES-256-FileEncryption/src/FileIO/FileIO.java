@@ -25,13 +25,13 @@ public class FileIO {
             File outputFile = new File(outputPath);
             outputFile.createNewFile();
 
-            //Write encoded/decoded byte to said file
+            //Write byte date to said file
             stream = new FileOutputStream(outputFile);
             stream.write(fileBytes);
 
             System.out.println("The file was successfully saved to: " + outputFile);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
 
             //Make sure to close stream no matter what
