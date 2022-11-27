@@ -1,4 +1,4 @@
-# AES-256 File Encryptor
+# AES-256 File Encryptor (Partial Implentation)
 
 An AES-256 implentation used to encrypt and decyrpt files.
 
