@@ -20,31 +20,38 @@ public class Decrypt {
             {0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d}
     };
 
-    public static final int Nr = 4;
-    public static final int Nb = 4;
+
+    //The number of rounds for a 256bit
+    public static final int Nr = 14;
 
     
-    public static void decrypt(byte[] State, String CipherKey) {
-        Inv_KeyExpansion(CipherKey, Inv_ExpandedKey);
-        AddRoundKey(State, Inv_ExpandedKey + Nb * Br);
+    public static void decrypt(byte[] inputData, byte[] cipherKey) {
+        //Convert 16 bytes into 4x32 bit ints.
+        int[] state = new int[4];
+        for(int i = 0; i < 16; i+=4){
+            state[i/4] = inputData[i] + (int)(inputData[i+1]) << 8 + (int)(inputData[i+2]) << 16 + (int)(inputData[i+3]) << 24;
+        }
+
+        int[] ExpandedKey = Encrypt.convertToWordArray(KeyManager.expandKey(cipherKey));
+        Encrypt.AddIterationKey(state, ExpandedKey[Nr]);
 
         for(int i = Nr - 1; i > 0; i --)
-            invIteration(State, Inv_ExpandedKey + Nb * i);
+            invIteration(state, ExpandedKey[i]);
 
-        invFinalIteration(State, Inv_ExpandedKey);
+        invFinalIteration(state, ExpandedKey[0]);
     }
 
 
 
     //This is the same as the normal iteration but in reverse order using inverse of each method
-    private static void invIteration(int[]state, int[] roundKey){
+    private static void invIteration(int[]state, int roundKey){
         Encrypt.AddIterationKey(state, roundKey);
         invMixColumn(state);
         invShiftRow(state);
         invByteSub(state);
     }
 
-    private static void invFinalIteration(int[]state, int[]roundKey){
+    private static void invFinalIteration(int[]state, int roundKey){
         Encrypt.AddIterationKey(state, roundKey);
         invShiftRow(state);
         invByteSub(state);

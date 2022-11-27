@@ -1,10 +1,43 @@
-# AES-256
+# AES-256 File Encryptor
 
-Links used:
-https://www.brainkart.com/article/AES-Key-Expansion_8410/#:~:text=Key%20Expansion%20Algorithm-,The%20AES%20key%20expansion%20algorithm%20takes%20as%20input%20a%20four,next%20page%20describes%20the%20expansion
+An AES-256 implentation used to encrypt and decyrpt files.
+
+This project was created during the 2022 BC Hacks 4 event, <br>by Aidan Morris, and 
+
+<br>
+
+
+## Usage:
+
+1. Encrypt a file:
+    ```sh
+    java -jar AES-256-FE.jar -e "target file" "output file" "password file.key"
+    ```
+
+2. Decrypt a file:
+    ```sh
+    java -jar AES-256-FE.jar -d "target file" "output file" "password file.key"
+    ```
+
+<br>
+
+
+## Acknowledgments:
+
+The algorithm used was based off the orignal proposal of Rijndael:
+
+https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines/documents/aes-development/rijndael-ammended.pdf
+
+<br>
+
+Reference was taken from
+
+https://blog.nindalf.com/posts/implementing-aes/
+
+<br>
+
+And S_Box and Galois Multiplcation Look-up table data was sourced from:
 
 https://en.wikipedia.org/wiki/Rijndael_S-box
 
-https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#High-level_description_of_the_algorithm
-
-https://en.wikipedia.org/wiki/AES_key_schedule
+https://en.wikipedia.org/wiki/Rijndael_MixColumns#Galois_Multiplication_lookup_tables 
