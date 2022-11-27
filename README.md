@@ -6,7 +6,6 @@ This project was created during the 2022 BC Hacks 4 event, <br>by Aidan Morris, 
 
 <br>
 
-
 ## Usage:
 
 1. Encrypt a file:
@@ -20,7 +19,6 @@ This project was created during the 2022 BC Hacks 4 event, <br>by Aidan Morris, 
     ```
 
 <br>
-
 
 ## Acknowledgments:
 
