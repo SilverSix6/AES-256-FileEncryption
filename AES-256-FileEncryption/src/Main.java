@@ -1,12 +1,4 @@
-import Algorithm.Encrypt;
-import Algorithm.Decrypt;
-import FileIO.*;
-import org.apache.commons.codec.digest.DigestUtils;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
 
@@ -24,7 +16,8 @@ public class Main {
                     String
          */
 
-        //If key wasn't found or inputted after to create one
+    /*
+        //If key wasn't found or inputted ask to create one
         if(args[3].equals(null)){
             System.out.println("The key file was not found or was not inputted.\n Would you like to create one: (y/n)");
             Scanner userInput = new Scanner(System.in);
@@ -98,7 +91,11 @@ public class Main {
         }
 
 
+     */
+
 
     }
+
+
 
 }
