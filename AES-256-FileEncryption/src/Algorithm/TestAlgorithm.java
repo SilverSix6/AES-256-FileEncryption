@@ -1,6 +1,5 @@
 package Algorithm;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,15 @@ public class TestAlgorithm {
     }
 
     @Test
+    public void testInvertabilityRowShift(){
+        int[] state = new int[]{0x19dba1b4, 0xe386f8c6, 0x326a3ee8, 0x655e78dd};
+        Encrypt.ShiftRow(state);
+        Decrypt.invShiftRow(state);
+        Assertions.assertTrue(Arrays.equals(state,new int[]{0x19dba1b4, 0xe386f8c6, 0x326a3ee8, 0x655e78dd}));
+    }
+
+
+    @Test
     public void testByteSub(){
         int[] state = new int[]{0x8e9ff1c6, 0x4ddce1c7, 0xa158d1c8, 0xbc9dc1c9};
         Encrypt.ByteSub(state);
@@ -42,6 +50,14 @@ public class TestAlgorithm {
         int[] state = new int[]{0x19dba1b4, 0xe386f8c6, 0x326a3ee8, 0x655e78dd};
         Decrypt.invByteSub(state);
         Assertions.assertTrue(Arrays.equals(state,new int[]{0x8e9ff1c6, 0x4ddce1c7, 0xa158d1c8, 0xbc9dc1c9}));
+    }
+
+    @Test
+    public void testInvertabilityByteSub(){
+        int[] state = new int[]{0x19dba1b4, 0xe386f8c6, 0x326a3ee8, 0x655e78dd};
+        Encrypt.ByteSub(state);
+        Decrypt.invByteSub(state);
+        Assertions.assertTrue(Arrays.equals(state,new int[]{0x19dba1b4, 0xe386f8c6, 0x326a3ee8, 0x655e78dd}));
     }
 
     @Test
@@ -70,8 +86,8 @@ public class TestAlgorithm {
 
     @Test
     public void testEncryptionDectryption(){
-        byte[] testState = new byte[]{(byte) 0xa8, (byte) 0x81, 0x26, 0x2c, 0x54, 0x39, 0x3e, (byte) 0xa0, 0x49, (byte) 0x99, (byte) 0xe9, (byte) 0xde, 0x15, (byte) 0x89, (byte) 0xd3, (byte) 0xa4};
-        byte[] compState = new byte[]{(byte) 0xa8, (byte) 0x81, 0x26, 0x2c, 0x54, 0x39, 0x3e, (byte) 0xa0, 0x49, (byte) 0x99, (byte) 0xe9, (byte) 0xde, 0x15, (byte) 0x89, (byte) 0xd3, (byte) 0xa4};
+        byte[] testState = new byte[]{0x26, 0x26, 0x26, 0x2c, 0x54, 0x39, 0x3e, 0x26, 0x49, 0x26, 0x26, 0x26, 0x15, 0x26, 0x26, 0x26};
+        byte[] compState = new byte[]{0x26, 0x26, 0x26, 0x2c, 0x54, 0x39, 0x3e, 0x26, 0x49, 0x26, 0x26, 0x26, 0x15, 0x26, 0x26, 0x26};
 
         byte[] testKey = sha256("password");
 
@@ -80,5 +96,10 @@ public class TestAlgorithm {
 
         Assertions.assertTrue(Arrays.equals(testState,compState));
 
+    }
+
+    @Test
+    public void testKeyEx(){
+        byte[] inKey = new byte[]{0x60,0x3D, (byte) 0xEB,0x10,};
     }
 }

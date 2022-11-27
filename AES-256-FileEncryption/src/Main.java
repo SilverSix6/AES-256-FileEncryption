@@ -59,7 +59,7 @@ public class Main {
             byte[] fileBytes = FileIO.load(new File(args[1]));
 
             //bytes that will be outputted are the next highest multiple of 16 plus and additional 4 bytes for input file size
-            byte[] encryptedBytes = new byte[((fileBytes.length) / 16) * 16 + 16 + 4];
+            byte[] encryptedBytes = new byte[((fileBytes.length) / 16) * 16 + 16];
 
             //get key bytes
             byte[] keyValue = FileIO.load(new File(args[3]));
@@ -78,8 +78,6 @@ public class Main {
                     }
                 }
 
-
-
                 //Run encryption algorithm
                 Encrypt.encrypt(temp, keyValue);
 
@@ -89,26 +87,13 @@ public class Main {
                 }
             }
 
-            //Add size of input file to end of file for reconstruction
-            int fileSize = fileBytes.length;
-
-            int[] ints = new int[4];
-            ints[0] = (fileSize >> 24) & 0xFF;
-            ints[1] = (fileSize >> 16) & 0xFF;
-            ints[2] = (fileSize >> 8) & 0xFF;
-            ints[3] = fileSize & 0xFF;
-
-            for(int i = 0; i < 4; i++){
-                encryptedBytes[((fileBytes.length) / 16) * 16 + 16 + i] = (byte) ints[i];
-            }
-
             //Save file Bytes to specified output location
             FileIO.save(encryptedBytes, args[2]);
 
         } else if (args[0].equals("-d")){
             //Load encoded file into memory
             byte[] fileBytes = FileIO.load(new File(args[1]));
-            byte[] decryptedBytes = new byte[fileBytes.length - 8];
+            byte[] decryptedBytes = new byte[fileBytes.length];
 
             //get key bytes
             byte[] keyValue = FileIO.load(new File(args[3]));
@@ -126,22 +111,8 @@ public class Main {
 
             }
 
-            //Get the length of the original file
-            byte[] intBytes = new byte[4];
-            for(int i = 3; i >= 0; i--){
-               intBytes[fileBytes.length - i] = fileBytes[fileBytes.length - i];
-            }
-
-            int newLength = intBytes[3] + (int)(intBytes[2]) >> 8 + (int)(intBytes[1]) >> 16 + (int)(intBytes[0]) >> 24;
-
-            //Copy decryptedBytes to new array that is length newLength
-            byte[] trimmedDecryptedBytes = new byte[newLength];
-            for(int i = 0; i < newLength; i++){
-                trimmedDecryptedBytes[i] = decryptedBytes[i];
-            }
-
             //Save file Bytes to specified output location
-            FileIO.save(trimmedDecryptedBytes, args[2]);
+            FileIO.save(decryptedBytes, args[2]);
         }
 
 

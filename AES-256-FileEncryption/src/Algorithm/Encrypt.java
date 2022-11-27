@@ -126,22 +126,29 @@ public class Encrypt {
             0xd7,0xd9,0xcb,0xc5,0xef,0xe1,0xf3,0xfd,0xa7,0xa9,0xbb,0xb5,0x9f,0x91,0x83,0x8d};
 
 
-
     public static void encrypt(byte[] inputData, byte[] CipherKey){
         //Convert 16 bytes into 4x32 bit ints.
         int[] state = new int[4];
         for(int i = 0; i < 16; i+=4){
-            state[i/4] = inputData[i] + (int)(inputData[i+1]) << 8 + (int)(inputData[i+2]) << 16 + (int)(inputData[i+3]) << 24;
+            state[i/4] = inputData[i] + ((int)(inputData[i+1]) << 8) + ((int)(inputData[i+2]) << 16) + ((int)(inputData[i+3]) << 24);
         }
 
-        int[] ExpandedKey = convertToWordArray(KeyManager.expandKey(CipherKey));
+        int[] ExpandedKey = KeyExpansion.expandKey(CipherKey);
         AddIterationKey(state, ExpandedKey[0]);
 
         for(int i = 1;i < Nr;i++)
             Iteration(state, ExpandedKey[i]);
 
         FinalIteration(state, ExpandedKey[Nr]);
+
+        for(int i = 0; i < 16; i+=4){
+            inputData[i] =   (byte) ((state[i/4] >> 24 ) & 0xFF);
+            inputData[i+1] = (byte) ((state[i/4] >> 16 ) & 0xFF);
+            inputData[i+2] = (byte) ((state[i/4] >> 8 ) & 0xFF);
+            inputData[i+3] = (byte) ((state[i/4]) & 0xFF);
+        }
     }
+
 
     public static int[] convertToWordArray(byte[] expandKey) {
         int[] words = new int[15];
