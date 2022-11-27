@@ -1,10 +1,13 @@
 package Algorithm;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+
+import static org.apache.commons.codec.digest.DigestUtils.*;
 
 public class TestAlgorithm {
 
@@ -23,7 +26,7 @@ public class TestAlgorithm {
     @Test
     public void testInvRowShift(){
         int[] state = new int[]{0x8e9f01c6, 0xdc01c64d, 0x01c6a158, 0xc6bc9d01};
-        Decrypt.invShiftColumn(state);
+        Decrypt.invShiftRow(state);
         Assertions.assertTrue(Arrays.equals(state,new int[]{0x8e9f01c6, 0x4ddc01c6, 0xa15801c6, 0xbc9d01c6}));
     }
 
@@ -63,5 +66,19 @@ public class TestAlgorithm {
         Encrypt.MixColumn(state);
         Decrypt.invMixColumn(state);
         Assertions.assertTrue(Arrays.equals(state,new int[]{0x8e9f01c6, 0x4ddc01c6, 0xa15801c6, 0xbc9d01c6}));
+    }
+
+    @Test
+    public void testEncryptionDectryption(){
+        byte[] testState = new byte[]{(byte) 0xa8, (byte) 0x81, 0x26, 0x2c, 0x54, 0x39, 0x3e, (byte) 0xa0, 0x49, (byte) 0x99, (byte) 0xe9, (byte) 0xde, 0x15, (byte) 0x89, (byte) 0xd3, (byte) 0xa4};
+        byte[] compState = new byte[]{(byte) 0xa8, (byte) 0x81, 0x26, 0x2c, 0x54, 0x39, 0x3e, (byte) 0xa0, 0x49, (byte) 0x99, (byte) 0xe9, (byte) 0xde, 0x15, (byte) 0x89, (byte) 0xd3, (byte) 0xa4};
+
+        byte[] testKey = sha256("password");
+
+        Encrypt.encrypt(testState, testKey);
+        Decrypt.decrypt(testState, testKey);
+
+        Assertions.assertTrue(Arrays.equals(testState,compState));
+
     }
 }

@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="AES-256-FileEncrytion">
-    <output-path>$PROJECT_DIR$/out/artifacts/AES_256_FileEncrytion</output-path>
-    <root id="archive" name="AES-256-FileEncrytion.jar" />
-  </artifact>
-</component>

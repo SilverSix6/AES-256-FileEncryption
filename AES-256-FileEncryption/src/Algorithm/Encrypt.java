@@ -1,7 +1,7 @@
 package Algorithm;
 
 public class Encrypt {
-    public static final int Nr = 4;
+    public static final int Nr = 14;
     public static final int Nb = 4;
 
     public static final int[][] S_BOX = {
@@ -127,25 +127,32 @@ public class Encrypt {
 
 
 
-    public static void encrypt(byte[] inputData, String CipherKey){
+    public static void encrypt(byte[] inputData, byte[] CipherKey){
         //Convert 16 bytes into 4x32 bit ints.
         int[] state = new int[4];
-        for(int i = 0; i < 4; i++){
-            state[i] = inputData[i] + (int)(inputData[i+1]) >> 8 + (int)(inputData[i+2]) >> 16 + (int)(inputData[i+3]) >> 24;
+        for(int i = 0; i < 16; i+=4){
+            state[i/4] = inputData[i] + (int)(inputData[i+1]) << 8 + (int)(inputData[i+2]) << 16 + (int)(inputData[i+3]) << 24;
         }
 
-        KeyExpansion(CipherKey,ExpandedKey);
-        AddRoundKey(state, ExpandedKey);
+        int[] ExpandedKey = convertToWordArray(KeyManager.expandKey(CipherKey));
+        AddIterationKey(state, ExpandedKey[0]);
 
         for(int i = 1;i < Nr;i++)
-            Iteration(state, ExpandedKey + Nb * i);
+            Iteration(state, ExpandedKey[i]);
 
-        FinalIteration(state, ExpandedKey + Nb * Nr);
+        FinalIteration(state, ExpandedKey[Nr]);
+    }
+
+    public static int[] convertToWordArray(byte[] expandKey) {
+        int[] words = new int[15];
+        for(int i = 0; i < 60; i+=4){
+            words[i/4] = (int)(expandKey[i]) + (int)(expandKey[i+1] << 8) + (int)(expandKey[i+2] << 16) + (int)(expandKey[i+3] << 24);
+        }
+        return words;
     }
 
 
-
-    static void Iteration(int[] state, int[] expandedKey){
+    static void Iteration(int[] state, int expandedKey){
         ByteSub(state);
         ShiftRow(state);
         MixColumn(state);
@@ -153,7 +160,7 @@ public class Encrypt {
     }
 
     //The final iteration skips the MixColumn step
-    static void FinalIteration(int[] state, int[] expandedKey){
+    static void FinalIteration(int[] state, int expandedKey){
         ByteSub(state);
         ShiftRow(state);
         AddIterationKey(state, expandedKey);
@@ -259,10 +266,16 @@ public class Encrypt {
         return -1;
     }
 
-    static void AddIterationKey(int[] state, int[] expandedKey) {
+    static void AddIterationKey(int[] state, int expandedKey) {
+        int[] splitIterationKey = new int[4];
+        splitIterationKey[0] = (state[1] >> 24) & 0xFF;
+        splitIterationKey[1] = (state[1] >> 16) & 0xFF;
+        splitIterationKey[2] = (state[1] >> 8) & 0xFF;
+        splitIterationKey[3] = state[1] & 0xFF;
+
         //For each state xor with current expandedKey
         for(int i = 0; i < 4; i++){
-            state[i] = state[i] ^ expandedKey[i];
+            state[i] = state[i] ^ splitIterationKey[i];
         }
     }
 }

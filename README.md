@@ -5,7 +5,6 @@ An AES-256 implentation used to encrypt and decyrpt files.
 This project was created during the 2022 BC Hacks 4 event, <br>by Aidan Morris, and 
 
 <br>
-<br>
 
 ## Usage:
 
@@ -20,7 +19,6 @@ This project was created during the 2022 BC Hacks 4 event, <br>by Aidan Morris, 
     ```
 
 <br>
-<br>
 
 ## Acknowledgments:
 
@@ -33,8 +31,6 @@ https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines
 Reference was taken from
 
 https://blog.nindalf.com/posts/implementing-aes/
-https://en.wikipedia.org/wiki/AES_key_schedule
-https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
 <br>
 
