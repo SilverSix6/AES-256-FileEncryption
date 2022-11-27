@@ -33,6 +33,8 @@ https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines
 Reference was taken from
 
 https://blog.nindalf.com/posts/implementing-aes/
+https://en.wikipedia.org/wiki/AES_key_schedule
+https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
 <br>
 
